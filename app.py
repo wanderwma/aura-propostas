@@ -63,8 +63,8 @@ CONSULTORES = {
         "email": "breno.figueiredo@auracapitalsec.com.br",
         "telefone_consultor": ""
     },
-    ""Wander Moreira Alves"": {
-        "email": ""wander.alves@auracapitalsec.com.br"",
+    "Wander Moreira Alves": {
+        "email": "wander.alves@auracapitalsec.com.br",
         "telefone_consultor": ""
     },
 }
