@@ -63,8 +63,8 @@ CONSULTORES = {
         "email": "breno.figueiredo@auracapitalsec.com.br",
         "telefone_consultor": ""
     },
-    "Marcus Vinicius Stevanin Ramos": {
-        "email": "marcus.ramos@auracapitalsec.com.br",
+    ""Wander Moreira Alves"": {
+        "email": ""wander.alves@auracapitalsec.com.br"",
         "telefone_consultor": ""
     },
 }
