@@ -70,11 +70,16 @@ CONSULTORES = {
         "telefone_consultor": "",
         "cargo": "Head Comercial"
     },
+    "Luís Felipe Santos e Silva": {
+        "email": "luis.silva@auracapitalsec.com.br",
+        "telefone_consultor": "",
+        "cargo": "Consultor"
+    },
 }
 
 TRIBUNAIS = [
     "TJSP", "TJRJ", "TJMG", "TJRS", "TJPR", "TJSC", "TJBA",
-    "TJGO", "TJMT", "TJMS", "TJPA", "TJAM", "TJCE", "TJPE",
+    "TJGO", "TJMT", "TJMS", "TJPA", "TJAM", "TJCE", "TJPE", "TJRN",
     "TRF1", "TRF2", "TRF3", "TRF4", "TRF5",
     "STJ", "STF", "TNU"
 ]
