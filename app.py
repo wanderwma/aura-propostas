@@ -65,21 +65,21 @@ CONSULTORES = {
         "telefone_consultor": "",
         "cargo": "Consultor Comercial"
     },
+    "Igor Nolasco Diniz": {
+        "email": "igor.diniz@auracapitalsec.com.br",
+        "telefone_consultor": "",
+        "cargo": "Consultor Comercial"
+    },
     "Wander Moreira Alves": {
         "email": "wander.alves@auracapitalsec.com.br",
         "telefone_consultor": "",
         "cargo": "Head Comercial"
     },
-    "Luís Felipe Santos e Silva": {
-        "email": "luis.silva@auracapitalsec.com.br",
-        "telefone_consultor": "",
-        "cargo": "Consultor"
-    },
 }
 
 TRIBUNAIS = [
     "TJSP", "TJRJ", "TJMG", "TJRS", "TJPR", "TJSC", "TJBA",
-    "TJGO", "TJMT", "TJMS", "TJPA", "TJAM", "TJCE", "TJPE", "TJRN",
+    "TJGO", "TJMT", "TJMS", "TJPA", "TJAM", "TJCE", "TJPE",
     "TRF1", "TRF2", "TRF3", "TRF4", "TRF5",
     "STJ", "STF", "TNU"
 ]
