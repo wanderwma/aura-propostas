@@ -1,12 +1,60 @@
 import re
 import os
-import base64
 from datetime import datetime, timedelta
 import streamlit as st
+import gspread
+from google.oauth2.service_account import Credentials
 
 # ══════════════════════════════════════════════
 # CONFIGURAÇÃO DA PÁGINA
 # ══════════════════════════════════════════════
+# ══════════════════════════════════════════════
+# CONEXÃO GOOGLE SHEETS
+# ══════════════════════════════════════════════
+@st.cache_resource
+def conectar_sheets():
+    scopes = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive",
+    ]
+    creds = Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=scopes
+    )
+    client = gspread.authorize(creds)
+    sheet = client.open_by_key(st.secrets["SHEET_ID"])
+    return sheet
+
+def registrar_proposta(dados: dict):
+    try:
+        sheet = conectar_sheets()
+        aba = sheet.sheet1
+
+        # Criar cabeçalho se a planilha estiver vazia
+        if aba.row_count == 0 or not aba.row_values(1):
+            aba.append_row([
+                "Data", "Nº Proposta", "Consultor", "Cliente",
+                "Tribunal", "Natureza", "Valor de Face",
+                "Valor Proposto", "Prazo Pagamento", "E-mail Consultor"
+            ])
+
+        aba.append_row([
+            dados["data"],
+            dados["numeroProposta"],
+            dados["consultor"],
+            dados["nomeCliente"],
+            dados["tribunal"],
+            dados["natureza"],
+            dados["valorFace"],
+            dados["valorProposto"],
+            dados["prazoPagamento"],
+            dados["email"],
+        ])
+        return True
+    except Exception as e:
+        st.warning(f"⚠️ Proposta gerada, mas não foi possível registrar na planilha: {e}")
+        return False
+
 st.set_page_config(
     page_title="Aura Capital — Gerador de Propostas",
     page_icon="📄",
@@ -230,6 +278,7 @@ if st.button("🚀 Gerar Proposta"):
                 with open(caminho_html, "w", encoding="utf-8") as f:
                     f.write(html_content)
 
+                registrar_proposta(cliente)
                 st.success("✅ Proposta gerada com sucesso!")
 
                 # Botão de download do HTML
