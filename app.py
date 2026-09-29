@@ -22,13 +22,20 @@ def conectar_sheets():
         scopes=scopes
     )
     client = gspread.authorize(creds)
-    sheet = client.open_by_key(st.secrets["SHEET_ID"])
+    # Tenta ler SHEET_ID de dois lugares possíveis
+    try:
+        sheet_id = st.secrets["SHEET_ID"]
+    except KeyError:
+        sheet_id = st.secrets["gcp_service_account"]["SHEET_ID"]
+    sheet = client.open_by_key(sheet_id)
     return sheet
 
 def registrar_proposta(dados: dict):
     try:
         sheet = conectar_sheets()
         aba = sheet.sheet1
+        # Tenta ler SHEET_ID de dois lugares possíveis
+
 
         # Criar cabeçalho se a planilha estiver vazia
         if aba.row_count == 0 or not aba.row_values(1):
