@@ -29,29 +29,54 @@ def registrar_proposta(dados: dict):
     try:
         sheet = conectar_sheets()
         aba = sheet.sheet1
-        # Criar cabeçalho se a planilha estiver vazia
-        if aba.row_count == 0 or not aba.row_values(1):
-            aba.append_row([
-                "Data", "Nº Proposta", "Consultor", "Cliente",
-                "Tribunal", "Natureza", "Valor de Face",
-                "Valor Proposto", "Prazo Pagamento", "E-mail Consultor"
-            ])
 
-        aba.append_row([
+        cabecalho = [
+            "Data", "Nº Proposta", "Consultor", "Cliente", "Nº Processo",
+            "Tribunal", "Natureza", "Valor de Face",
+            "Valor Proposto", "Prazo Pagamento", "E-mail Consultor"
+        ]
+
+        # Garante o cabeçalho e migra a planilha existente sem perder dados.
+        cabecalho_atual = aba.row_values(1)
+        if not cabecalho_atual:
+            aba.append_row(cabecalho)
+        elif "Nº Processo" not in cabecalho_atual:
+            # Insere a nova coluna depois de Cliente (coluna E).
+            aba.insert_cols([["Nº Processo"]], col=5)
+
+        nova_linha = [
             dados["data"],
             dados["numeroProposta"],
             dados["consultor"],
             dados["nomeCliente"],
+            dados["numeroProcesso"],
             dados["tribunal"],
             dados["natureza"],
             dados["valorFace"],
             dados["valorProposto"],
             dados["prazoPagamento"],
             dados["email"],
-        ])
-        return True
+        ]
+
+        # Nº da proposta funciona como chave única:
+        # se já existir, atualiza a linha; caso contrário, cria uma nova.
+        numeros_propostas = aba.col_values(2)
+
+        if dados["numeroProposta"] in numeros_propostas:
+            linha = numeros_propostas.index(dados["numeroProposta"]) + 1
+            aba.update(
+                range_name=f"A{linha}:K{linha}",
+                values=[nova_linha]
+            )
+            return "atualizada"
+
+        aba.append_row(nova_linha)
+        return "criada"
+
     except Exception as e:
-        st.warning(f"⚠️ Proposta gerada, mas não foi possível registrar na planilha: {e}")
+        st.warning(
+            "⚠️ Proposta gerada, mas não foi possível registrar na planilha."
+        )
         return False
 
 st.set_page_config(
@@ -140,6 +165,45 @@ NATUREZAS = [
     "Tributário",
 ]
 
+
+# ══════════════════════════════════════════════
+# FORMATAÇÃO DE VALORES
+# ══════════════════════════════════════════════
+def formatar_brl(valor):
+    if not valor:
+        return ""
+
+    texto = str(valor).strip()
+    texto = texto.replace("R$", "").replace(" ", "")
+
+    try:
+        # Ex.: 500.000,50
+        if "," in texto:
+            texto = texto.replace(".", "").replace(",", ".")
+            numero = float(texto)
+        # Ex.: 500000.50
+        elif "." in texto and len(texto.split(".")[-1]) == 2:
+            numero = float(texto)
+        # Ex.: 500000 ou 500.000
+        else:
+            texto = texto.replace(".", "")
+            numero = float(texto)
+
+        formatado = f"{numero:,.2f}"
+        formatado = (
+            formatado
+            .replace(",", "X")
+            .replace(".", ",")
+            .replace("X", ".")
+        )
+        return f"R$ {formatado}"
+    except ValueError:
+        return valor
+
+
+def formatar_campo_moeda(chave):
+    st.session_state[chave] = formatar_brl(st.session_state.get(chave, ""))
+
 # ══════════════════════════════════════════════
 # HEADER
 # ══════════════════════════════════════════════
@@ -187,9 +251,21 @@ st.markdown("### 💰 Dados da Operação")
 
 col5, col6 = st.columns(2)
 with col5:
-    valor_face = st.text_input("Valor de Face do Precatório", placeholder="R$1.000.000,00")
+    valor_face = st.text_input(
+        "Valor de Face do Precatório",
+        placeholder="Ex: 500000",
+        key="valor_face",
+        on_change=formatar_campo_moeda,
+        args=("valor_face",)
+    )
 with col6:
-    valor_proposto = st.text_input("Valor Proposto (oferta)", placeholder="R$150.000,00")
+    valor_proposto = st.text_input(
+        "Valor Proposto (oferta)",
+        placeholder="Ex: 150000",
+        key="valor_proposto",
+        on_change=formatar_campo_moeda,
+        args=("valor_proposto",)
+    )
 
 col7, col8 = st.columns(2)
 with col7:
@@ -277,8 +353,13 @@ if st.button("🚀 Gerar Proposta"):
                 with open(caminho_html, "w", encoding="utf-8") as f:
                     f.write(html_content)
 
-                registrar_proposta(cliente)
-                st.success("✅ Proposta gerada com sucesso!")
+                status_registro = registrar_proposta(cliente)
+                if status_registro == "atualizada":
+                    st.success("✅ Proposta atualizada com sucesso! O registro existente foi substituído na planilha.")
+                elif status_registro == "criada":
+                    st.success("✅ Proposta gerada e registrada com sucesso!")
+                else:
+                    st.success("✅ Proposta gerada com sucesso!")
 
                 # Botão de download do HTML
                 html_bytes = html_content.encode("utf-8")
