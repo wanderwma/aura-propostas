@@ -86,6 +86,47 @@ st.set_page_config(
 )
 
 # ══════════════════════════════════════════════
+# AUTENTICAÇÃO MICROSOFT / ENTRA ID
+# ══════════════════════════════════════════════
+def obter_email_usuario():
+    """Obtém o e-mail corporativo retornado pelo Microsoft Entra."""
+    if not st.user.is_logged_in:
+        return ""
+
+    email = st.user.get("email") or st.user.get("preferred_username") or ""
+    return str(email).strip().lower()
+
+
+if not st.user.is_logged_in:
+    st.markdown("## Aura Capital — Gerador de Propostas")
+    st.markdown("Acesso restrito ao time comercial autorizado.")
+    if st.button("Entrar com Microsoft", type="primary", use_container_width=True):
+        try:
+            st.login("microsoft")
+        except Exception:
+            st.error(
+                "A autenticação Microsoft ainda não foi configurada nos Secrets "
+                "do aplicativo. Procure o administrador do sistema."
+            )
+    st.stop()
+
+email_usuario = obter_email_usuario()
+
+if email_usuario not in USUARIOS_AUTORIZADOS:
+    st.error("Seu usuário Microsoft não está autorizado a acessar este sistema.")
+    st.caption(f"Conta identificada: {email_usuario or 'não informada'}")
+    st.button("Sair", on_click=st.logout)
+    st.stop()
+
+usuario_atual = USUARIOS_AUTORIZADOS[email_usuario]
+nome_consultor = usuario_atual["nome"]
+dados_consultor = {
+    "email": email_usuario,
+    "telefone_consultor": "",
+    "cargo": usuario_atual["cargo"],
+}
+
+# ══════════════════════════════════════════════
 # CSS PERSONALIZADO
 # ══════════════════════════════════════════════
 st.markdown("""
@@ -126,26 +167,22 @@ st.markdown("""
 # ══════════════════════════════════════════════
 # CONSULTORES CADASTRADOS
 # ══════════════════════════════════════════════
-CONSULTORES = {
-    "Marcel Álvaro Mano de Incrocci": {
-        "email": "marcel.incrocci@auracapitalsec.com.br",
-        "telefone_consultor": "",
+USUARIOS_AUTORIZADOS = {
+    "marcel.incrocci@auracapitalsec.com.br": {
+        "nome": "Marcel Álvaro Mano de Incrocci",
         "cargo": "Consultor Comercial"
     },
-    "Breno Borges de Figueiredo": {
-        "email": "breno.figueiredo@auracapitalsec.com.br",
-        "telefone_consultor": "",
+    "igor.diniz@auracapitalsec.com.br": {
+        "nome": "Igor Nolasco Diniz",
         "cargo": "Consultor Comercial"
     },
-    "Igor Nolasco Diniz": {
-        "email": "igor.diniz@auracapitalsec.com.br",
-        "telefone_consultor": "",
-        "cargo": "Consultor Comercial"
-    },
-    "Wander Moreira Alves": {
-        "email": "wander.alves@auracapitalsec.com.br",
-        "telefone_consultor": "",
+    "wander.alves@auracapitalsec.com.br": {
+        "nome": "Wander Moreira Alves",
         "cargo": "Head Comercial"
+    },
+    "rafael.campos@auracapitalsec.com.br": {
+        "nome": "Rafael da Silva Campos",
+        "cargo": "Supervisor Comercial"
     },
 }
 
@@ -215,15 +252,14 @@ st.divider()
 # FORMULÁRIO
 # ══════════════════════════════════════════════
 
-# — Consultor —
-st.markdown("### 👤 Consultor Responsável")
-nome_consultor = st.selectbox(
-    "Selecione o consultor",
-    options=list(CONSULTORES.keys()),
-    index=0
-)
-dados_consultor = CONSULTORES[nome_consultor]
-st.caption(f"📧 {dados_consultor['email']}")
+# — Consultor autenticado —
+col_usuario, col_sair = st.columns([4, 1])
+with col_usuario:
+    st.markdown("### 👤 Consultor Responsável")
+    st.markdown(f"**{nome_consultor}**")
+    st.caption(f"{dados_consultor['cargo']} · {dados_consultor['email']}")
+with col_sair:
+    st.button("Sair", on_click=st.logout, use_container_width=True)
 
 st.divider()
 
