@@ -86,6 +86,28 @@ st.set_page_config(
 )
 
 # ══════════════════════════════════════════════
+# USUÁRIOS AUTORIZADOS
+# ══════════════════════════════════════════════
+USUARIOS_AUTORIZADOS = {
+    "marcel.incrocci@auracapitalsec.com.br": {
+        "nome": "Marcel Álvaro Mano de Incrocci",
+        "cargo": "Consultor Comercial"
+    },
+    "igor.diniz@auracapitalsec.com.br": {
+        "nome": "Igor Nolasco Diniz",
+        "cargo": "Consultor Comercial"
+    },
+    "wander.alves@auracapitalsec.com.br": {
+        "nome": "Wander Moreira Alves",
+        "cargo": "Head Comercial"
+    },
+    "rafael.campos@auracapitalsec.com.br": {
+        "nome": "Rafael da Silva Campos",
+        "cargo": "Supervisor Comercial"
+    },
+}
+
+# ══════════════════════════════════════════════
 # AUTENTICAÇÃO MICROSOFT / ENTRA ID
 # ══════════════════════════════════════════════
 def obter_email_usuario():
@@ -163,28 +185,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
-# ══════════════════════════════════════════════
-# CONSULTORES CADASTRADOS
-# ══════════════════════════════════════════════
-USUARIOS_AUTORIZADOS = {
-    "marcel.incrocci@auracapitalsec.com.br": {
-        "nome": "Marcel Álvaro Mano de Incrocci",
-        "cargo": "Consultor Comercial"
-    },
-    "igor.diniz@auracapitalsec.com.br": {
-        "nome": "Igor Nolasco Diniz",
-        "cargo": "Consultor Comercial"
-    },
-    "wander.alves@auracapitalsec.com.br": {
-        "nome": "Wander Moreira Alves",
-        "cargo": "Head Comercial"
-    },
-    "rafael.campos@auracapitalsec.com.br": {
-        "nome": "Rafael da Silva Campos",
-        "cargo": "Supervisor Comercial"
-    },
-}
 
 TRIBUNAIS = [
     "TJSP", "TJRJ", "TJMG", "TJRS", "TJPR", "TJSC", "TJBA",
