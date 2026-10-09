@@ -37,12 +37,10 @@ def registrar_proposta(dados: dict):
             "Valor Proposto", "Prazo Pagamento", "E-mail Consultor"
         ]
 
-        # Garante o cabeçalho e migra a planilha existente sem perder dados.
         cabecalho_atual = aba.row_values(1)
         if not cabecalho_atual:
             aba.append_row(cabecalho)
         elif "Nº Processo" not in cabecalho_atual:
-            # Insere a nova coluna depois de Cliente (coluna E).
             aba.insert_cols([["Nº Processo"]], col=5)
 
         nova_linha = [
@@ -59,8 +57,6 @@ def registrar_proposta(dados: dict):
             dados["email"],
         ]
 
-        # Nº da proposta funciona como chave única:
-        # se já existir, atualiza a linha; caso contrário, cria uma nova.
         numeros_propostas = aba.col_values(2)
 
         if dados["numeroProposta"] in numeros_propostas:
@@ -167,7 +163,6 @@ NATUREZAS = [
     "Tributário",
 ]
 
-
 # ══════════════════════════════════════════════
 # FORMATAÇÃO DE VALORES
 # ══════════════════════════════════════════════
@@ -179,14 +174,11 @@ def formatar_brl(valor):
     texto = texto.replace("R$", "").replace(" ", "")
 
     try:
-        # Ex.: 500.000,50
         if "," in texto:
             texto = texto.replace(".", "").replace(",", ".")
             numero = float(texto)
-        # Ex.: 500000.50
         elif "." in texto and len(texto.split(".")[-1]) == 2:
             numero = float(texto)
-        # Ex.: 500000 ou 500.000
         else:
             texto = texto.replace(".", "")
             numero = float(texto)
@@ -206,7 +198,6 @@ def formatar_brl(valor):
 def formatar_campo_moeda(chave):
     st.session_state[chave] = formatar_brl(st.session_state.get(chave, ""))
 
-
 # ══════════════════════════════════════════════
 # HEADER
 # ══════════════════════════════════════════════
@@ -217,7 +208,6 @@ st.divider()
 # ══════════════════════════════════════════════
 # FORMULÁRIO
 # ══════════════════════════════════════════════
-
 # — Consultor —
 st.markdown("### 👤 Consultor Responsável")
 nome_consultor = st.selectbox(
@@ -296,19 +286,22 @@ def gerar_html(cliente: dict) -> str:
     gm_logo_path = os.path.join(os.path.dirname(__file__), "gm_logo.b64")
     if os.path.exists(gm_logo_path):
         with open(gm_logo_path, "r", encoding="utf-8") as f:
-            gm_logo_b64 = f.read().strip()
+            # Remove quebras de linha e qualquer espaço do base64.
+            gm_logo_b64 = "".join(f.read().split())
 
         gm_css = """
     .header img.gm-logo {
       position: absolute;
-      left: 274px;
+      left: 252px;
       top: 50%;
       transform: translateY(-50%);
-      height: 52px;
+      height: 43px;
       width: auto;
+      max-width: 190px;
+      object-fit: contain;
       background: #ffffff;
-      padding: 5px 7px;
-      border-radius: 4px;
+      padding: 4px 6px;
+      border-radius: 3px;
     }
 """
         html = html.replace("</style>", gm_css + "  </style>", 1)
@@ -381,7 +374,6 @@ if st.button("🚀 Gerar Proposta"):
                 html_content = gerar_html(cliente)
                 nome_arquivo = f"Proposta_{nome_cliente.replace(' ', '_')}_{numero_proposta}.html"
 
-                # Salva o HTML na pasta Aura-Propostas/output/
                 output_dir = os.path.join(os.path.dirname(__file__), "output")
                 os.makedirs(output_dir, exist_ok=True)
                 caminho_html = os.path.join(output_dir, nome_arquivo)
@@ -396,7 +388,6 @@ if st.button("🚀 Gerar Proposta"):
                 else:
                     st.success("✅ Proposta gerada com sucesso!")
 
-                # Botão de download do HTML
                 html_bytes = html_content.encode("utf-8")
                 st.download_button(
                     label="⬇️ Baixar Proposta (HTML)",
@@ -412,7 +403,6 @@ if st.button("🚀 Gerar Proposta"):
                     "3. Pressione **Cmd+P** → Destino: **Salvar como PDF** → Salvar"
                 )
 
-                # Log local
                 log_path = os.path.join(os.path.dirname(__file__), "log.txt")
                 with open(log_path, "a", encoding="utf-8") as log:
                     log.write(
