@@ -161,10 +161,10 @@ def gerar_html(cliente: dict) -> str:
             gm_logo_b64 = "".join(f.read().split())
 
         footer_css = """
-    /* RODAPÉ INSTITUCIONAL - COMPOSIÇÃO FINAL */
+    /* RODAPÉ INSTITUCIONAL - LIMPO */
     .footer {
-      height: 56px !important;
-      padding: 5px 36px 4px !important;
+      height: 52px !important;
+      padding: 4px 36px !important;
       display: grid !important;
       grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) !important;
       gap: 14px !important;
@@ -191,11 +191,9 @@ def gerar_html(cliente: dict) -> str:
     }
     .footer .gm-footer-brand {
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1px;
-      min-width: 230px;
+      min-width: 205px;
       transform: translateY(-1px);
     }
     .footer .gm-footer-logo {
@@ -206,26 +204,11 @@ def gerar_html(cliente: dict) -> str:
       object-fit: contain;
       filter: none !important;
     }
-    .footer .gm-footer-copy {
-      border-left: none;
-      padding-left: 0;
-      line-height: 1.05;
-      white-space: nowrap;
-      text-align: center;
-      margin-top: -2px;
-    }
-    .footer .gm-footer-copy span {
-      display: block;
-      color: #4f5276;
-      font-size: 6.6px;
-      font-weight: 600;
-      letter-spacing: .05px;
-    }
     @media print {
-      @page { margin-bottom: 62px !important; }
+      @page { margin-bottom: 58px !important; }
       .footer {
-        height: 56px !important;
-        padding: 5px 30px 4px !important;
+        height: 52px !important;
+        padding: 4px 30px !important;
         background: #ffffff !important;
         border-top: 0.8px solid #252958 !important;
         -webkit-print-color-adjust: exact !important;
@@ -244,9 +227,6 @@ def gerar_html(cliente: dict) -> str:
             '<div class="gm-footer-brand">'
             f'<img class="gm-footer-logo" src="data:image/png;base64,{gm_logo_b64}" '
             'alt="Galera Mari Advogados - 40 anos">'
-            '<div class="gm-footer-copy">'
-            '<span>Braço financeiro do ecossistema Galera Mari</span>'
-            '</div>'
             '</div>'
         )
 
