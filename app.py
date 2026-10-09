@@ -29,7 +29,6 @@ def registrar_proposta(dados: dict):
             "Tribunal", "Natureza", "Valor de Face", "Valor Proposto",
             "Prazo Pagamento", "E-mail Consultor",
         ]
-
         cabecalho_atual = aba.row_values(1)
         if not cabecalho_atual:
             aba.append_row(cabecalho)
@@ -42,16 +41,13 @@ def registrar_proposta(dados: dict):
             dados["natureza"], dados["valorFace"], dados["valorProposto"],
             dados["prazoPagamento"], dados["email"],
         ]
-
         numeros_propostas = aba.col_values(2)
         if dados["numeroProposta"] in numeros_propostas:
             linha = numeros_propostas.index(dados["numeroProposta"]) + 1
             aba.update(range_name=f"A{linha}:K{linha}", values=[nova_linha])
             return "atualizada"
-
         aba.append_row(nova_linha)
         return "criada"
-
     except Exception:
         st.warning("⚠️ Proposta gerada, mas não foi possível registrar na planilha.")
         return False
@@ -110,30 +106,19 @@ st.markdown(
     h1 { color: #252958; font-size: 1.6rem; }
     h3 { color: #3f52a0; font-size: 1rem; margin-top: 1.5rem; }
     .stButton > button {
-        background-color: #252958;
-        color: white;
-        border: none;
-        padding: 0.6rem 2rem;
-        font-size: 1rem;
-        font-weight: 600;
-        border-radius: 6px;
-        width: 100%;
+        background-color: #252958; color: white; border: none;
+        padding: 0.6rem 2rem; font-size: 1rem; font-weight: 600;
+        border-radius: 6px; width: 100%;
     }
     .stButton > button:hover { background-color: #3f52a0; }
     .stDownloadButton > button {
-        background-color: #c9a832;
-        color: #252958;
-        border: none;
-        padding: 0.6rem 2rem;
-        font-size: 1rem;
-        font-weight: 700;
-        border-radius: 6px;
-        width: 100%;
+        background-color: #c9a832; color: #252958; border: none;
+        padding: 0.6rem 2rem; font-size: 1rem; font-weight: 700;
+        border-radius: 6px; width: 100%;
     }
     div[data-testid="stSelectbox"] label,
     div[data-testid="stTextInput"] label {
-        font-weight: 600;
-        color: #252958;
+        font-weight: 600; color: #252958;
     }
 </style>
 """,
@@ -144,9 +129,7 @@ st.markdown(
 def formatar_brl(valor):
     if not valor:
         return ""
-
     texto = str(valor).strip().replace("R$", "").replace(" ", "")
-
     try:
         if "," in texto:
             texto = texto.replace(".", "").replace(",", ".")
@@ -156,14 +139,8 @@ def formatar_brl(valor):
         else:
             texto = texto.replace(".", "")
             numero = float(texto)
-
         formatado = f"{numero:,.2f}"
-        formatado = (
-            formatado
-            .replace(",", "X")
-            .replace(".", ",")
-            .replace("X", ".")
-        )
+        formatado = formatado.replace(",", "X").replace(".", ",").replace("X", ".")
         return f"R$ {formatado}"
     except ValueError:
         return valor
@@ -184,59 +161,78 @@ def gerar_html(cliente: dict) -> str:
             gm_logo_b64 = "".join(f.read().split())
 
         footer_css = """
-    /* CHANCELA INSTITUCIONAL GALERA MARI NO RODAPÉ */
+    /* RODAPÉ INSTITUCIONAL - OTIMIZADO PARA HTML E PDF */
     .footer {
-      height: 46px !important;
-      padding: 6px 36px !important;
+      height: 58px !important;
+      padding: 7px 36px !important;
       display: grid !important;
-      grid-template-columns: 1fr auto 1fr !important;
-      gap: 18px !important;
+      grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) !important;
+      gap: 16px !important;
       align-items: center !important;
+      background: #ffffff !important;
+      border-top: 2px solid #252958 !important;
+      box-shadow: none !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
     .footer > p:first-child {
       justify-self: start;
+      color: #5a5c80 !important;
       white-space: nowrap;
-      font-size: 7px !important;
+      font-size: 6.6px !important;
+      line-height: 1.25;
     }
     .footer .f-num {
       justify-self: end;
+      color: #9b7c16 !important;
       white-space: nowrap;
-      font-size: 7px !important;
+      font-size: 6.6px !important;
+      font-weight: 700 !important;
     }
     .footer .gm-footer-brand {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      min-width: 260px;
+      min-width: 245px;
     }
     .footer .gm-footer-logo {
-      height: 24px;
+      display: block;
+      height: 32px;
       width: auto;
-      max-width: 104px;
+      max-width: 130px;
       object-fit: contain;
-      filter: brightness(0) invert(1);
+      filter: none !important;
     }
     .footer .gm-footer-copy {
-      border-left: 1px solid rgba(255,255,255,.25);
+      border-left: 1px solid #d0cee8;
       padding-left: 10px;
-      line-height: 1.25;
-      color: #b8bbd5;
+      line-height: 1.2;
       white-space: nowrap;
     }
     .footer .gm-footer-copy strong {
       display: block;
-      color: #ffffff;
+      color: #252958;
       font-size: 6.8px;
-      font-weight: 600;
-      letter-spacing: .25px;
+      font-weight: 700;
+      letter-spacing: .15px;
     }
     .footer .gm-footer-copy span {
       display: block;
       margin-top: 2px;
-      color: #9ea3c6;
-      font-size: 6.2px;
-      letter-spacing: .2px;
+      color: #5a5c80;
+      font-size: 6.1px;
+      letter-spacing: .1px;
+    }
+    @media print {
+      @page { margin-bottom: 64px !important; }
+      .footer {
+        background: #ffffff !important;
+        border-top: 1.5px solid #252958 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .footer .gm-footer-logo { filter: none !important; }
     }
 """
         html = html.replace("</style>", footer_css + "  </style>", 1)
@@ -266,7 +262,6 @@ def gerar_html(cliente: dict) -> str:
     pendentes = re.findall(r"\{\{.*?\}\}", html)
     if pendentes:
         st.warning(f"⚠️ Campos não preenchidos no template: {pendentes}")
-
     return html
 
 
@@ -285,24 +280,13 @@ st.caption(f"{dados_consultor['cargo']} · {dados_consultor['email']}")
 
 st.divider()
 st.markdown("### 🧾 Dados do Cliente")
-
 col1, col2 = st.columns(2)
 with col1:
-    nome_cliente = st.text_input(
-        "Nome completo do credor",
-        placeholder="Ex: MARIA DA SILVA SANTOS",
-    )
+    nome_cliente = st.text_input("Nome completo do credor", placeholder="Ex: MARIA DA SILVA SANTOS")
 with col2:
-    telefone = st.text_input(
-        "WhatsApp (com DDD e código do país)",
-        placeholder="5565999999999",
-    )
+    telefone = st.text_input("WhatsApp (com DDD e código do país)", placeholder="5565999999999")
 
-numero_processo = st.text_input(
-    "Número do Processo",
-    placeholder="0012345-67.2023.8.26.0100",
-)
-
+numero_processo = st.text_input("Número do Processo", placeholder="0012345-67.2023.8.26.0100")
 col3, col4 = st.columns(2)
 with col3:
     tribunal = st.selectbox("Tribunal", options=TRIBUNAIS, index=0)
@@ -311,23 +295,16 @@ with col4:
 
 st.divider()
 st.markdown("### 💰 Dados da Operação")
-
 col5, col6 = st.columns(2)
 with col5:
     valor_face = st.text_input(
-        "Valor de Face do Precatório",
-        placeholder="Ex: 500000",
-        key="valor_face",
-        on_change=formatar_campo_moeda,
-        args=("valor_face",),
+        "Valor de Face do Precatório", placeholder="Ex: 500000",
+        key="valor_face", on_change=formatar_campo_moeda, args=("valor_face",),
     )
 with col6:
     valor_proposto = st.text_input(
-        "Valor Proposto (oferta)",
-        placeholder="Ex: 150000",
-        key="valor_proposto",
-        on_change=formatar_campo_moeda,
-        args=("valor_proposto",),
+        "Valor Proposto (oferta)", placeholder="Ex: 150000",
+        key="valor_proposto", on_change=formatar_campo_moeda, args=("valor_proposto",),
     )
 
 col7, col8 = st.columns(2)
@@ -339,11 +316,9 @@ with col7:
 with col8:
     numero_proposta = st.text_input(
         "Número da Proposta",
-        value=(
-            f"2026-{datetime.now().month:02d}-"
-            f"{datetime.now().day:02d}{datetime.now().hour:02d}"
-            f"{datetime.now().minute:02d}"
-        ),
+        value=(f"2026-{datetime.now().month:02d}-"
+               f"{datetime.now().day:02d}{datetime.now().hour:02d}"
+               f"{datetime.now().minute:02d}"),
     )
 
 st.divider()
@@ -356,11 +331,7 @@ if st.button("🚀 Gerar Proposta"):
         "Valor proposto": valor_proposto,
         "Telefone": telefone,
     }
-    campos_vazios = [
-        k for k, v in campos_obrigatorios.items()
-        if not str(v).strip()
-    ]
-
+    campos_vazios = [k for k, v in campos_obrigatorios.items() if not str(v).strip()]
     if campos_vazios:
         st.error(f"Preencha os campos obrigatórios: {', '.join(campos_vazios)}")
     else:
@@ -371,12 +342,8 @@ if st.button("🚀 Gerar Proposta"):
                 "janeiro", "fevereiro", "março", "abril", "maio", "junho",
                 "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
             ]
-
             partes = nome_consultor.split()
-            iniciais = (
-                partes[0][0] + partes[-1][0]
-            ).upper() if len(partes) >= 2 else partes[0][:2].upper()
-
+            iniciais = (partes[0][0] + partes[-1][0]).upper() if len(partes) >= 2 else partes[0][:2].upper()
             cliente = {
                 "nomeCliente": nome_cliente.upper(),
                 "telefone": telefone,
@@ -394,11 +361,9 @@ if st.button("🚀 Gerar Proposta"):
                 "data": f"{hoje.day} de {meses[hoje.month - 1]} de {hoje.year}",
                 "validade": f"{validade.day} de {meses[validade.month - 1]} de {validade.year}",
             }
-
             try:
                 html_content = gerar_html(cliente)
                 nome_arquivo = f"Proposta_{nome_cliente.replace(' ', '_')}_{numero_proposta}.html"
-
                 output_dir = os.path.join(os.path.dirname(__file__), "output")
                 os.makedirs(output_dir, exist_ok=True)
                 caminho_html = os.path.join(output_dir, nome_arquivo)
@@ -407,9 +372,7 @@ if st.button("🚀 Gerar Proposta"):
 
                 status_registro = registrar_proposta(cliente)
                 if status_registro == "atualizada":
-                    st.success(
-                        "✅ Proposta atualizada com sucesso! O registro existente foi substituído na planilha."
-                    )
+                    st.success("✅ Proposta atualizada com sucesso! O registro existente foi substituído na planilha.")
                 elif status_registro == "criada":
                     st.success("✅ Proposta gerada e registrada com sucesso!")
                 else:
@@ -421,7 +384,6 @@ if st.button("🚀 Gerar Proposta"):
                     file_name=nome_arquivo,
                     mime="text/html",
                 )
-
                 st.info(
                     "**Como salvar como PDF:**\n"
                     "1. Clique em '⬇️ Baixar Proposta (HTML)' acima\n"
@@ -433,10 +395,8 @@ if st.button("🚀 Gerar Proposta"):
                 with open(log_path, "a", encoding="utf-8") as log:
                     log.write(
                         f"{datetime.now().strftime('%Y-%m-%d %H:%M')} | "
-                        f"{nome_consultor} | {nome_cliente} | "
-                        f"{numero_proposta} | {valor_proposto}\n"
+                        f"{nome_consultor} | {nome_cliente} | {numero_proposta} | {valor_proposto}\n"
                     )
-
             except Exception as e:
                 st.error(f"Erro ao gerar proposta: {e}")
 
