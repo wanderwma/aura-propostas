@@ -161,13 +161,13 @@ def gerar_html(cliente: dict) -> str:
             gm_logo_b64 = "".join(f.read().split())
 
         footer_css = """
-    /* RODAPÉ INSTITUCIONAL - OTIMIZADO PARA HTML E PDF */
+    /* RODAPÉ INSTITUCIONAL - REFINO FINAL */
     .footer {
-      height: 58px !important;
+      height: 64px !important;
       padding: 7px 36px !important;
       display: grid !important;
       grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) !important;
-      gap: 16px !important;
+      gap: 18px !important;
       align-items: center !important;
       background: #ffffff !important;
       border-top: 2px solid #252958 !important;
@@ -191,42 +191,38 @@ def gerar_html(cliente: dict) -> str:
     }
     .footer .gm-footer-brand {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      min-width: 245px;
+      gap: 3px;
+      min-width: 210px;
     }
     .footer .gm-footer-logo {
       display: block;
-      height: 32px;
+      height: 40px;
       width: auto;
-      max-width: 130px;
+      max-width: 164px;
       object-fit: contain;
       filter: none !important;
     }
     .footer .gm-footer-copy {
-      border-left: 1px solid #d0cee8;
-      padding-left: 10px;
-      line-height: 1.2;
+      border-left: none;
+      padding-left: 0;
+      line-height: 1.15;
       white-space: nowrap;
-    }
-    .footer .gm-footer-copy strong {
-      display: block;
-      color: #252958;
-      font-size: 6.8px;
-      font-weight: 700;
-      letter-spacing: .15px;
+      text-align: center;
     }
     .footer .gm-footer-copy span {
       display: block;
-      margin-top: 2px;
       color: #5a5c80;
-      font-size: 6.1px;
+      font-size: 6.4px;
+      font-weight: 500;
       letter-spacing: .1px;
     }
     @media print {
-      @page { margin-bottom: 64px !important; }
+      @page { margin-bottom: 70px !important; }
       .footer {
+        height: 64px !important;
         background: #ffffff !important;
         border-top: 1.5px solid #252958 !important;
         -webkit-print-color-adjust: exact !important;
@@ -242,7 +238,6 @@ def gerar_html(cliente: dict) -> str:
             f'<img class="gm-footer-logo" src="data:image/png;base64,{gm_logo_b64}" '
             'alt="Galera Mari Advogados - 40 anos">'
             '<div class="gm-footer-copy">'
-            '<strong>Aura Capital Securitizadora S.A.</strong>'
             '<span>Braço financeiro do ecossistema Galera Mari</span>'
             '</div>'
             '</div>'
