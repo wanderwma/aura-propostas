@@ -159,14 +159,19 @@ def gerar_html(cliente: dict) -> str:
 
         branding_css = """
     /* BRANDING INSTITUCIONAL AURA + GALERA MARI */
+    .header img.logo {
+      left: 36px;
+      top: 37%;
+      height: 40px;
+    }
     .header img.gm-logo {
       position: absolute;
-      left: 226px;
-      top: 42%;
+      left: 255px;
+      top: 37%;
       transform: translateY(-50%);
-      height: 48px;
+      height: 37px;
       width: auto;
-      max-width: 168px;
+      max-width: 150px;
       object-fit: contain;
       background: transparent !important;
       padding: 0 !important;
@@ -175,20 +180,20 @@ def gerar_html(cliente: dict) -> str:
     }
     .header .brand-divider {
       position: absolute;
-      left: 210px;
-      top: 20px;
-      height: 44px;
+      left: 232px;
+      top: 15px;
+      height: 38px;
       width: 1px;
-      background: rgba(255,255,255,.28);
+      background: rgba(255,255,255,.35);
     }
     .header .institutional-signature {
       position: absolute;
       left: 36px;
-      bottom: 7px;
-      font-size: 6.6px;
+      bottom: 9px;
+      font-size: 7px;
       font-weight: 500;
-      color: #aeb2d2;
-      letter-spacing: .55px;
+      color: #b8bbd5;
+      letter-spacing: .45px;
       white-space: nowrap;
     }
 """
