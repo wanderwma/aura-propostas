@@ -161,16 +161,16 @@ def gerar_html(cliente: dict) -> str:
             gm_logo_b64 = "".join(f.read().split())
 
         footer_css = """
-    /* RODAPÉ INSTITUCIONAL - REFINO FINAL */
+    /* RODAPÉ INSTITUCIONAL - COMPOSIÇÃO FINAL */
     .footer {
-      height: 64px !important;
-      padding: 7px 36px !important;
+      height: 56px !important;
+      padding: 5px 36px 4px !important;
       display: grid !important;
       grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) !important;
-      gap: 18px !important;
+      gap: 14px !important;
       align-items: center !important;
       background: #ffffff !important;
-      border-top: 2px solid #252958 !important;
+      border-top: 1px solid #252958 !important;
       box-shadow: none !important;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
@@ -180,7 +180,7 @@ def gerar_html(cliente: dict) -> str:
       color: #5a5c80 !important;
       white-space: nowrap;
       font-size: 6.6px !important;
-      line-height: 1.25;
+      line-height: 1.2;
     }
     .footer .f-num {
       justify-self: end;
@@ -194,41 +194,48 @@ def gerar_html(cliente: dict) -> str:
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      min-width: 210px;
+      gap: 1px;
+      min-width: 230px;
+      transform: translateY(-1px);
     }
     .footer .gm-footer-logo {
       display: block;
-      height: 40px;
+      height: 46px;
       width: auto;
-      max-width: 164px;
+      max-width: 190px;
       object-fit: contain;
       filter: none !important;
     }
     .footer .gm-footer-copy {
       border-left: none;
       padding-left: 0;
-      line-height: 1.15;
+      line-height: 1.05;
       white-space: nowrap;
       text-align: center;
+      margin-top: -2px;
     }
     .footer .gm-footer-copy span {
       display: block;
-      color: #5a5c80;
-      font-size: 6.4px;
-      font-weight: 500;
-      letter-spacing: .1px;
+      color: #4f5276;
+      font-size: 6.6px;
+      font-weight: 600;
+      letter-spacing: .05px;
     }
     @media print {
-      @page { margin-bottom: 70px !important; }
+      @page { margin-bottom: 62px !important; }
       .footer {
-        height: 64px !important;
+        height: 56px !important;
+        padding: 5px 30px 4px !important;
         background: #ffffff !important;
-        border-top: 1.5px solid #252958 !important;
+        border-top: 0.8px solid #252958 !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-      .footer .gm-footer-logo { filter: none !important; }
+      .footer .gm-footer-logo {
+        height: 46px !important;
+        max-width: 190px !important;
+        filter: none !important;
+      }
     }
 """
         html = html.replace("</style>", footer_css + "  </style>", 1)
