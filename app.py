@@ -161,7 +161,7 @@ def gerar_html(cliente: dict) -> str:
             gm_logo_b64 = "".join(f.read().split())
 
         footer_css = """
-    /* RODAPÉ INSTITUCIONAL - LIMPO */
+    /* RODAPÉ INSTITUCIONAL - ALTO CONTRASTE */
     .footer {
       height: 52px !important;
       padding: 4px 36px !important;
@@ -202,7 +202,8 @@ def gerar_html(cliente: dict) -> str:
       width: auto;
       max-width: 190px;
       object-fit: contain;
-      filter: none !important;
+      opacity: 1 !important;
+      filter: grayscale(1) brightness(0) contrast(200%) !important;
     }
     @media print {
       @page { margin-bottom: 58px !important; }
@@ -217,7 +218,9 @@ def gerar_html(cliente: dict) -> str:
       .footer .gm-footer-logo {
         height: 46px !important;
         max-width: 190px !important;
-        filter: none !important;
+        opacity: 1 !important;
+        filter: grayscale(1) brightness(0) contrast(250%) !important;
+        -webkit-filter: grayscale(1) brightness(0) contrast(250%) !important;
       }
     }
 """
