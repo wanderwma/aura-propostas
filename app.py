@@ -25,6 +25,7 @@ def conectar_sheets():
     sheet = client.open("Aura — Registro de Propostas")
     return sheet
 
+
 def registrar_proposta(dados: dict):
     try:
         sheet = conectar_sheets()
@@ -73,11 +74,12 @@ def registrar_proposta(dados: dict):
         aba.append_row(nova_linha)
         return "criada"
 
-    except Exception as e:
+    except Exception:
         st.warning(
             "⚠️ Proposta gerada, mas não foi possível registrar na planilha."
         )
         return False
+
 
 st.set_page_config(
     page_title="Aura Capital — Gerador de Propostas",
@@ -204,6 +206,7 @@ def formatar_brl(valor):
 def formatar_campo_moeda(chave):
     st.session_state[chave] = formatar_brl(st.session_state.get(chave, ""))
 
+
 # ══════════════════════════════════════════════
 # HEADER
 # ══════════════════════════════════════════════
@@ -288,6 +291,38 @@ def gerar_html(cliente: dict) -> str:
     template_path = os.path.join(os.path.dirname(__file__), "template.html")
     with open(template_path, "r", encoding="utf-8") as f:
         html = f.read()
+
+    # Insere a marca Galera Mari ao lado da logo da Aura no cabeçalho.
+    gm_logo_path = os.path.join(os.path.dirname(__file__), "gm_logo.b64")
+    if os.path.exists(gm_logo_path):
+        with open(gm_logo_path, "r", encoding="utf-8") as f:
+            gm_logo_b64 = f.read().strip()
+
+        gm_css = """
+    .header img.gm-logo {
+      position: absolute;
+      left: 274px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 52px;
+      width: auto;
+      background: #ffffff;
+      padding: 5px 7px;
+      border-radius: 4px;
+    }
+"""
+        html = html.replace("</style>", gm_css + "  </style>", 1)
+        gm_logo_html = (
+            f'<img class="gm-logo" '
+            f'src="data:image/png;base64,{gm_logo_b64}" '
+            f'alt="Galera Mari Advogados - 40 anos">'
+        )
+        html = re.sub(
+            r'(<img class="logo"[^>]*>)',
+            lambda m: m.group(1) + gm_logo_html,
+            html,
+            count=1
+        )
 
     for chave, valor in cliente.items():
         html = re.sub(r"\{\{\s*" + chave + r"\s*\}\}", str(valor), html)
