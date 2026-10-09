@@ -151,7 +151,7 @@ st.markdown("""
 
 TRIBUNAIS = [
     "TJSP", "TJRJ", "TJMG", "TJRS", "TJPR", "TJSC", "TJBA",
-    "TJGO", "TJMT", "TJMS", "TJPA", "TJAM", "TJCE", "TJPE",
+    "TJGO", "TJMT", "TJMS", "TJPA", "TJAM", "TJCE", "TJPE", "TJDF",
     "TRF1", "TRF2", "TRF3", "TRF4", "TRF5", "TRF6",
     "STJ", "STF", "TNU"
 ]
