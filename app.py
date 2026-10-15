@@ -1,5 +1,6 @@
 import re
 import os
+import unicodedata
 from datetime import datetime, timedelta
 
 import streamlit as st
@@ -148,6 +149,14 @@ def formatar_brl(valor):
 
 def formatar_campo_moeda(chave):
     st.session_state[chave] = formatar_brl(st.session_state.get(chave, ""))
+
+
+def sanitizar_nome_arquivo(texto):
+    texto = unicodedata.normalize("NFKD", str(texto)).encode("ascii", "ignore").decode("ascii")
+    texto = re.sub(r"[\\/:*?\"<>|]+", "_", texto)
+    texto = re.sub(r"\s+", "_", texto.strip())
+    texto = re.sub(r"_+", "_", texto)
+    return texto.strip("._") or "proposta"
 
 
 def gerar_html(cliente: dict) -> str:
@@ -348,7 +357,9 @@ if st.button("🚀 Gerar Proposta"):
             }
             try:
                 html_content = gerar_html(cliente)
-                nome_arquivo = f"Proposta_{nome_cliente.replace(' ', '_')}_{numero_proposta}.html"
+                cliente_arquivo = sanitizar_nome_arquivo(nome_cliente)
+                proposta_arquivo = sanitizar_nome_arquivo(numero_proposta)
+                nome_arquivo = f"Proposta_{cliente_arquivo}_{proposta_arquivo}.html"
                 output_dir = os.path.join(os.path.dirname(__file__), "output")
                 os.makedirs(output_dir, exist_ok=True)
                 caminho_html = os.path.join(output_dir, nome_arquivo)
